@@ -1,0 +1,29 @@
+[package]
+name = "insighta"
+version = "0.1.0"
+edition = "2024"
+description = "CLI tool for the Insighta Labs intelligent query system"
+license = "MIT"
+
+[[bin]]
+name = "insighta"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+reqwest = { version = "0.12", features = ["json"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["full"] }
+indicatif = "0.17"
+tabled = { version = "0.15", features = ["derive"] }
+dirs = "5"
+open = "5"
+sha2 = "0.10"
+base64 = "0.22"
+rand = "0.8"
+anyhow = "1"
+chrono = { version = "0.4", features = ["serde"] }
+colored = "2"
+urlencoding = "2"
+bytes = "1.11.1"
