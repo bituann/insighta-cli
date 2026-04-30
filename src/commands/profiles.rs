@@ -5,7 +5,7 @@ use tabled::{Table, Tabled};
 
 use crate::{api::ApiClient, cli::ProfileCommands, display};
 
-#[derive(Table)]
+#[derive(Tabled)]
 struct ProfileRow {
     #[tabled(rename = "ID")]
     id: String,
