@@ -77,8 +77,6 @@ pub async fn login() -> Result<()> {
         .await
         .context("Invalid response from server")?;
 
-    pb.finish_and_clear();
-
     let access_token = res["access_token"]
         .as_str()
         .context("No access token received")?;
@@ -89,9 +87,21 @@ pub async fn login() -> Result<()> {
     config::save(&Credentials {
         access_token: access_token.to_string(),
         refresh_token: refresh_token.to_string(),
-    })?;
+    })?;    
 
-    display::success("Logged in successfully!");
+    let data: Value = client
+        .get(&format!("{}/api/users/me", base_url()))
+        .bearer_auth(access_token)
+        .header("X-API-Version", "1")
+        .send()
+        .await?
+        .json()
+        .await?;
+    let user = data.get("data").unwrap_or(&Value::Null);
+
+    pb.finish_and_clear();
+
+    display::success(&format!("Logged in as @{}", user["username"].as_str().unwrap_or("—")));
     Ok(())
 }
 
@@ -119,7 +129,7 @@ pub async fn whoami() -> Result<()> {
     let mut client = crate::api::ApiClient::new()?;
 
     let pb = display::spinner("Fetching user info...");
-    let data: Value = client.get("/auth/me").await?;
+    let data: Value = client.get("/api/users/me").await?;
     pb.finish_and_clear();
 
     let user = &data["data"];
